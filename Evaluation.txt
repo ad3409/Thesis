@@ -1,0 +1,26 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2821
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 from transformers import AutoModelForCausalLM, AutoTokenizer\
+from datasets import load_dataset, load_metric\
+\
+# Load the Mistral model\
+model_name = "mistralai/Mistral-7B"\
+tokenizer = AutoTokenizer.from_pretrained(model_name)\
+model = AutoModelForCausalLM.from_pretrained(model_name)\
+\
+# Dataset and Metric\
+dataset = load_dataset("squad", split="validation")\
+metric = load_metric("squad")\
+\
+# Run evaluation\
+for example in dataset:\
+    input_text = example["question"] + " " + example["context"]\
+    inputs = tokenizer(input_text, return_tensors="pt", truncation=True)\
+    outputs = model.generate(inputs.input_ids)\
+    prediction = tokenizer.decode(outputs[0], skip_special_tokens=True)\
+    # Compare predictions to ground truth for metrics}
