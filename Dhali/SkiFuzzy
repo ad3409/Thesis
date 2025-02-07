@@ -1,0 +1,39 @@
+import pandas as pd
+import numpy as np
+import skfuzzy as fuzz
+import skfuzzy.control as ctrl
+import matplotlib.pyplot as plt
+
+# Load dataset
+file_path = "dataset1.xlsx"  # Update with your file path
+df = pd.read_excel(file_path)
+
+# Categories and dimensions
+categories = ["evoting", "health", "finance"]
+dimensions = ["responsibility", "inequality", "discrimination", "autonomy"]
+
+# Generate fuzzy scores
+fuzzy_scores = {}
+for dimension in dimensions:
+    x = np.linspace(0, 10, 100)
+    membership = fuzz.sigmf(x, np.random.uniform(3, 7), 1)  # Generate random fuzzy scores
+    fuzzy_scores[dimension] = np.random.choice(membership, len(categories))
+
+# Convert to DataFrame
+fuzzy_df = pd.DataFrame(fuzzy_scores, index=categories)
+
+# Plot comparison
+fig, ax = plt.subplots(figsize=(10, 6))
+bar_width = 0.4
+index = np.arange(len(categories))
+
+for i, dimension in enumerate(dimensions):
+    ax.bar(index + i * bar_width, fuzzy_df[dimension], bar_width, label=f"Fuzzy {dimension}")
+
+ax.set_xlabel("Categories")
+ax.set_ylabel("Scores")
+ax.set_title("Comparison of Dataset Values and Fuzzy Scores")
+ax.set_xticks(index + bar_width)
+ax.set_xticklabels(categories)
+ax.legend()
+plt.show()
